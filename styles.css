@@ -1,0 +1,22 @@
+form{
+    border-radius: 25px;
+    border-width: medium;
+    border-style: double;
+    text-align: center;
+    padding: 20px;
+}
+
+label{
+    float: left;
+    clear: both;
+}
+
+input[type="text"], input[type="password"]{
+    float: right;
+    
+}
+
+input[type="submit"]{
+    clear: both;
+    display: block;
+}
