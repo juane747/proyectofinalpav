@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld(//esto permite obtener estas funciones en el mai
         ,
         inicioCorrecto: (callback)=> ipcRenderer.on('inicioCorrecto',callback)
         ,
-        
+        edicion: (datoproducto)=> ipcRenderer.send('edicion',datoproducto)
+        ,
+        pedido: (datospedido)=> ipcRenderer.send('pedido',datospedido)
     }
 )

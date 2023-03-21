@@ -1,14 +1,19 @@
-var res = document.getElementById('respuesta')
+var res = document.getElementById('mensaje')
 var botoneditar= document.getElementById('Editar')
 var botonpedido = document.getElementById('Pedido')
-
+var tablaResultados=document.getElementById('TablaProductos')
 
 //funcion para recibir datos del servidor
 window.comunicacion.inicioCorrecto(function(event,args){
-    //alert(args)
+    //Mostramos datos del usuario actual, recibido del main
     res.innerHTML=args
 })
 
 botoneditar.addEventListener('click',function(){
-    window.comunicacion.registroValido([nombre.value,pass.value]);
+    window.comunicacion.edicion();
 })
+
+botonpedido.addEventListener('click',function(){
+    window.comunicacion.pedido();
+})
+
