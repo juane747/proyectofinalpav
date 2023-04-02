@@ -3,6 +3,7 @@ const path= require('path')
 const mysql = require('mysql2')
 const bcrypt=require('bcrypt');
 const saltRounds=10;
+const { Op } = require("sequelize");
 //Conectar squelize para la base de datos
 const {Sequelize, DataTypes}=require('sequelize');
 
@@ -107,12 +108,14 @@ function createWindow2(){
     ventana2.loadFile('segundo.html')
     Producto.findAll({
        where:{
-        idprod:3
+        idprod:{
+            [Op.gt]: 0,
+        }
        }
     })
     
     .then(([results, fields])=>{
-        console.log(results)
+       //clea console.log(results)
        // console.log(fields)
         ventana2.webContents.on('did-finish-load',()=>{
             ventana2.webContents.send('recibirDatos',results)

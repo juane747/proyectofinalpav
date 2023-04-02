@@ -18,6 +18,6 @@ contextBridge.exposeInMainWorld(//esto permite obtener estas funciones en el mai
         ,
         inicioError: (canal, callback) =>ipcRenderer.on('inicioError',callback)
         ,
-        recibirDatos: (callback) =>ipcRenderer.on('recibirDatos',callback)
+        recibirDatos: (canal,callback) =>ipcRenderer.on('recibirDatos',callback)
     }
 )
