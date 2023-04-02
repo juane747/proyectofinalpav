@@ -12,5 +12,12 @@ contextBridge.exposeInMainWorld(//esto permite obtener estas funciones en el mai
         edicion: (datoproducto)=> ipcRenderer.send('edicion',datoproducto)
         ,
         pedido: (datospedido)=> ipcRenderer.send('pedido',datospedido)
+
+        ,
+        nuevoregistro: (datosusuario)=> ipcRenderer.send('nuevoregistro',datosusuario)
+        ,
+        inicioError: (canal, callback) =>ipcRenderer.on('inicioError',callback)
+        ,
+        recibirDatos: (callback) =>ipcRenderer.on('recibirDatos',callback)
     }
 )

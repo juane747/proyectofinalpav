@@ -3,7 +3,7 @@ form{
     border-width: medium;
     border-style: double;
     text-align: center;
-    padding: 20px;
+    padding: 10px;
 }
 
 label{
@@ -16,7 +16,7 @@ input[type="text"], input[type="password"]{
     
 }
 
-input[type="submit"]{
+#form-buttons{
     clear: both;
     display: block;
 }

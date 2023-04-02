@@ -1,7 +1,8 @@
 var formulario=document.getElementById('form-login')
 var pass = document.getElementById('password')
 var nombre = document.getElementById('nombre-usuario')
-
+var botonnuevo= document.getElementById('nuevo')
+var erro=document.getElementById('error')
 
 var expMay = RegExp("[A-Z]")
 
@@ -24,3 +25,16 @@ formulario.addEventListener('submit',function(evento){
 
 })
 
+//aca definimos las funciones del boton nuevo para eniar datos a main
+botonnuevo.addEventListener('click',function(){
+
+    window.comunicacion.nuevoregistro([nombre.value,pass.value])
+})
+
+window.comunicacion.inicioError('inicioError',function(event,args){
+    error_div.innerText = args
+})
+
+window.comunicacion.inicioCorrecto(function(event,args){
+    alert(args)
+})
