@@ -114,9 +114,9 @@ function createWindow2(){
        }
     })
     
-    .then(([results, fields])=>{
-       //clea console.log(results)
-       // console.log(fields)
+    .then((results)=>{
+       console.log(results)
+       //console.log(fields)
         ventana2.webContents.on('did-finish-load',()=>{
             ventana2.webContents.send('recibirDatos',results)
         })    
@@ -129,15 +129,20 @@ function createWindow2(){
 //Creando tercera ventana para comunicacion entre ventanas
 let ventana3;//se deja aca para usarlo despues, antes estaba como const en la funcion de abajo
 
-function createWindow3(){
+function createWindow3(datos){
     ventana3 = new BrowserWindow({
         width: 400,
         height: 400,
         webPreferences:{//nos permite accede a funciones nod, en este caso para interface de comunicacion
             preload: path.join(app.getAppPath(),'preload.js')
         },
+        parent: ventana2
     })
     ventana3.loadFile('tercero.html')
+    ventana3.webContents.on('did-finish-load',()=>{
+        ventana3.webContents.send('recibirProducto',
+        datos)
+    })
 }
 
 //Creando tercera ventana para comunicacion entre ventanas
@@ -228,4 +233,41 @@ ipcMain.on('registroValido',function(event,args){
     })
         
 })
+
+//Recibimos datos de edicion Producto
+ipcMain.on('seleccionarElemento',function(event,args){
+    Producto.findAll({
+        where:{
+         idprod:args
+        }
+     })
+    //connection.promise()
+           // .execute(`SELECT * FROM profesor WHERE especializacion = '${args['tema']}'`)
+    .then((results)=>{
+        createWindow3([args,results])
+        
+    })
+
+})
+// Actualizacion de registro
+ipcMain.on('actualizarRegistro',function(event,args){//aca se reciben los datos de preload y se ejecuta metodo seleccionado
+    console.log(args)
+
+            Producto.update({
+                idprod:args[0],
+                nombreproducto: args[1],
+                descripcion: args[2],
+                codcategoria: args[3],
+                existencia: args[4],
+                precio:args[5]
+
+            },
+            {
+                where:{
+                    idprod: args[0]
+                }
+            })
+        
+})
+
 app.whenReady().then(createWindow)

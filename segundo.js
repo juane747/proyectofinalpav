@@ -1,22 +1,16 @@
 var res = document.getElementById('mensaje')
-var botoneditar= document.getElementById('Editar')
-var botonpedido = document.getElementById('Pedido')
 var tablaResultados=document.getElementById('TablaProductos')
-var productos;
+let Productos;
 //funcion para recibir datos del servidor
 window.comunicacion.inicioCorrecto(function(event,args){
     //Mostramos datos del usuario actual, recibido del main
     res.innerHTML=args
     
 })
-botoneditar.addEventListener('click',function(){
-    window.comunicacion.edicion();
-})
-botonpedido.addEventListener('click',function(){
-    window.comunicacion.pedido();
-})
+
 
 window.comunicacion.recibirDatos('recibirDatos',function(event,args){
+    Productos=args;
     console.log(args)
  
      for(let i =0; i<args.length;i++){
@@ -38,6 +32,9 @@ window.comunicacion.recibirDatos('recibirDatos',function(event,args){
     boton2.setAttribute('value',idProd)
     boton2.innerText = 'Pedir'
     boton2.addEventListener('click', realizarpedido)
+    
+    let celdaId=document.createElement('td')
+    celdaId.innerHTML=idProd
 
     let celdaNombre = document.createElement('td')
     celdaNombre.innerText = Nombre
@@ -58,17 +55,29 @@ window.comunicacion.recibirDatos('recibirDatos',function(event,args){
     celdaBoton.appendChild(boton)
 
     let celdaBoton2 = document.createElement('td')
-    celdaBoton2.appendChild(boton)
+    celdaBoton2.appendChild(boton2)
     let fila = document.createElement('tr')
     
+    fila.appendChild(celdaId)
     fila.appendChild(celdaNombre)
     fila.appendChild(celdaDescripcion)
     fila.appendChild(celdaCategoria)
     fila.appendChild(celdaExistencia)
     fila.appendChild(celdaPrecio)
+    fila.appendChild(celdaBoton)
+    fila.appendChild(celdaBoton2)
 
     tablaResultados.appendChild(fila)
 
      }
 })
  
+
+function realizarpedido(){
+
+}
+
+function editarElemento(event){
+    console.log(event.target.value)
+    window.comunicacion.seleccionarElemento(Productos[event.target.value - 1])
+}
