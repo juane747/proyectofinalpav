@@ -24,5 +24,13 @@ contextBridge.exposeInMainWorld(//esto permite obtener estas funciones en el mai
         recibirProducto: (canal, callback) =>ipcRenderer.on('recibirProducto',callback)
         ,
         actualizarRegistro: (datos)=> ipcRenderer.send('actualizarRegistro',datos)
+        ,
+        eliminarRegistro: (datos)=> ipcRenderer.send('eliminarRegistro',datos)
+        , 
+        seleccionarPedido:(datos) =>ipcRenderer.send('seleccionarPedido',datos)
+        ,
+        recibirPedido: (canal, callback) =>ipcRenderer.on('recibirPedido',callback)
+        ,
+        guardarpedido: (datos)=> ipcRenderer.send('guardarpedido',datos)
     }
 )

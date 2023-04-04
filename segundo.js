@@ -73,8 +73,9 @@ window.comunicacion.recibirDatos('recibirDatos',function(event,args){
 })
  
 
-function realizarpedido(){
-
+function realizarpedido(event){
+    console.log(event.target.value)
+    window.comunicacion.seleccionarPedido(Productos[event.target.value-1])
 }
 
 function editarElemento(event){

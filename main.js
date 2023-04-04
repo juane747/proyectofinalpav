@@ -49,6 +49,28 @@ const User=sequelize.define('Usuario',{
     timestamps: false  
 });
 
+//creacion de proveedor
+const Proveedor=sequelize.define('Proveedor',{
+    //Definicion de atributos del modelo tabla usuario
+    id:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    nombre:{
+        type: DataTypes.STRING,
+       // allowNull:false si no se coloca
+       
+    },
+    idcategoria:{
+        type: DataTypes.INTEGER,
+    },
+},{
+    //otras opciones del modelo aqui  timestamps, la ultima vez que modifico si la tabla no lo lleva hay que deshabilitar
+    timestamps: false  
+});
+
 //creacion de modelo productos
 const Producto=sequelize.define('Producto',{
     //Definicion de atributos del modelo tabla producto
@@ -80,6 +102,32 @@ const Producto=sequelize.define('Producto',{
     //otras opciones del modelo aqui  timestamps, la ultima vez que modifico si la tabla no lo lleva hay que deshabilitar
     timestamps: false  
 });
+
+//creacion de modelo del pedido
+const Pedido=sequelize.define('Pedido',{
+    //Definicion de atributos del modelo tabla pedido
+    fecha:{
+        type: DataTypes.DATE,
+        allowNull: false,
+        primaryKey: true,
+    },
+
+    idprod:{
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+    },
+    codproveedor:{
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+    },
+    cantidad:{
+        type: DataTypes.INTEGER
+    },
+},{
+    //otras opciones del modelo aqui  timestamps, la ultima vez que modifico si la tabla no lo lleva hay que deshabilitar
+    timestamps: false  
+});
+
 //primera ventana de inicio esion
 let ventana;
 
@@ -148,15 +196,19 @@ function createWindow3(datos){
 //Creando tercera ventana para comunicacion entre ventanas
 let ventana4;//se deja aca para usarlo despues, antes estaba como const en la funcion de abajo
 
-function createWindow4(){
+function createWindow4(datos){
     ventana4 = new BrowserWindow({
         width: 400,
         height: 400,
         webPreferences:{//nos permite accede a funciones nod, en este caso para interface de comunicacion
             preload: path.join(app.getAppPath(),'preload.js')
         },
+        parent:ventana2
     })
     ventana4.loadFile('cuarto.html')
+    ventana4.webContents.on('did-finish-load',()=>{
+        ventana4.webContents.send('recibirPedido',datos)
+    })
 }
 
 
@@ -234,25 +286,10 @@ ipcMain.on('registroValido',function(event,args){
         
 })
 
-//Recibimos datos de edicion Producto
-ipcMain.on('seleccionarElemento',function(event,args){
-    Producto.findAll({
-        where:{
-         idprod:args
-        }
-     })
-    //connection.promise()
-           // .execute(`SELECT * FROM profesor WHERE especializacion = '${args['tema']}'`)
-    .then((results)=>{
-        createWindow3([args,results])
-        
-    })
 
-})
 // Actualizacion de registro
-ipcMain.on('actualizarRegistro',function(event,args){//aca se reciben los datos de preload y se ejecuta metodo seleccionado
+ipcMain.on('actualizarRegistro',function(event,args){
     console.log(args)
-
             Producto.update({
                 idprod:args[0],
                 nombreproducto: args[1],
@@ -260,14 +297,59 @@ ipcMain.on('actualizarRegistro',function(event,args){//aca se reciben los datos 
                 codcategoria: args[3],
                 existencia: args[4],
                 precio:args[5]
-
             },
             {
                 where:{
                     idprod: args[0]
                 }
             })
-        
+})
+//definicion de eliminacion de registro
+ipcMain.on('eliminarRegistro',function(event,args){
+    console.log(args)
+        Producto.destroy({
+            where:{
+                idprod:args[0]
+            }
+        })
 })
 
+//recibimos datos de lista producto para abrir ventana pedido
+ipcMain.on('seleccionarPedido',function(event,args){
+    console.log(args)
+    Producto.findAll({
+        where:{
+            codcategoria:args
+        }
+    })
+    .then((results)=>{
+        console.log(results)
+        createWindow4([args,results])
+    })
+})
+
+
+//Recibimos datos de edicion Producto
+ipcMain.on('seleccionarElemento',function(event,args){
+    console.log(args)
+    Producto.findAll({
+        where:{
+         idprod:args
+        }
+     })
+    .then((results)=>{
+        createWindow3([args,results])
+    })
+})
+
+// Actualizacion de registro
+ipcMain.on('guardarpedido',function(event,args){
+    console.log(args)
+    Pedido.create({
+        fecha: Date.now,
+        idprod: args[0],
+        codproveedor: args[1],
+        cantidad:args[2]
+       })
+})
 app.whenReady().then(createWindow)

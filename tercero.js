@@ -14,7 +14,7 @@ botonguardar.addEventListener('click',function(){
 })
 
 botoneliminar.addEventListener('click',function(){
-    alert('registro eliminado')
+    window.comunicacion.eliminarRegistro([codProd.value])
 })
 
 window.comunicacion.recibirProducto('recibirProducto',function(event,args){
@@ -27,5 +27,5 @@ window.comunicacion.recibirProducto('recibirProducto',function(event,args){
    categoriaProd.value = Producto['codcategoria']
    existenciaProd.value= Producto['existencia']
    precioProd.value= Producto['precio']
-   codProd = document.getElementById('codprod').disabled=true
+   codProd.disabled=true
 })
